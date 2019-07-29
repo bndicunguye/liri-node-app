@@ -14,25 +14,31 @@ var keys = require("./keys.js");
 
 var spotify = new Spotify(keys.spotify);
 
-for (var i = 3; i < process.argv.length; i++){
+for (var i = 3; i < process.argv.length; i++) {
     if (i !== 3) {
         userSearch += " "
     }
 
     userSearch += process.argv[i]
 
-var search = process.argv[2]
+    var search = process.argv[2]
 }
 
 switch (search) {
     case "movie-this":
+        if (input === undefined) {
+            input = "Mr.Nobody"
+        }
         movie()
         break;
     case "concert-this":
-     concert()
+        concert()
         break;
     case "spotify-this-song":
-         song()
+        if (input === undefined) {
+            input = "The sign by Ace of Base"
+        }
+        song()
         break;
     case "do-what-it-says":
         console.log("do what?")
@@ -43,7 +49,7 @@ function movie() {
     console.log("movie", userSearch)
     axios.get("http://www.omdbapi.com/?t=" + userSearch + "=&plot=short&apikey=trilogy")
         .then(function (response) {
-          
+
             console.log('* Title of the movie : ' + response.data.Title)
             console.log('* Year the movie came out : ' + response.data.Released)
             console.log('* IMDB Rating of the movie. : ' + response.data.imdbRating)
@@ -56,33 +62,45 @@ function movie() {
 
 
         });
-    }
-
-  
+}
 
 
- function song() {
-   
+
+
+function song() {
+
     spotify
-    .search({ type: 'track', query: userSearch })
-    .then(function(response) {
-      console.log( "*Artist :" + response.tracks.items[0].album.artists[0].name);
-      console.log( "*The song's name :"+ response.tracks.items[0].name);  
-      console.log( "*A preview link of the song from Spotify :" + response.tracks.items[0].href);
-      console.log( "*The album that the song is from :" + response.tracks.items[0].album.name);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
-    }
- 
-  function concert() {
-     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
-    .then(function (response){
-     console.log(response)   
-     });
+        .search({ type: 'track', query: userSearch })
+        .then(function (response) {
+            console.log("*Artist :" + response.tracks.items[0].album.artists[0].name);
+            console.log("*The song's name :" + response.tracks.items[0].name);
+            console.log("*A preview link of the song from Spotify :" + response.tracks.items[0].href);
+            console.log("*The album that the song is from :" + response.tracks.items[0].album.name);
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
 
-   }  
+function concert() {
+    axios.get("https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp")
+   
+    .then(function (response) {
+    
+       
+      console.log("*Name of the venue :" + response.data[0].venue.name);
+      console.log("*Venue location :" + response.data[0].venue.city);
+      console.log("*Date of the Event :" + response.headers.date);
+    })
+    .catch(function (error) {
+    
+      console.log(error);
+    })
+    .finally(function () {
+      
+    });  
+
+}
 
 
 
