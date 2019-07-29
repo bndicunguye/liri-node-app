@@ -21,13 +21,14 @@ for (var i = 3; i < process.argv.length; i++) {
 
     userSearch += process.argv[i]
 
-    var search = process.argv[2]
 }
-
+    var search = process.argv[2]
+function check(){
 switch (search) {
     case "movie-this":
-        if (input === undefined) {
-            input = "Mr.Nobody"
+        console.log('booo',userSearch)
+        if (!userSearch) {
+            userSearch = "Mr. Nobody"
         }
         movie()
         break;
@@ -35,16 +36,19 @@ switch (search) {
         concert()
         break;
     case "spotify-this-song":
-        if (input === undefined) {
-            input = "The sign by Ace of Base"
+        if (userSearch === undefined) {
+            userSearch = "The sign by Ace of Base"
         }
         song()
         break;
     case "do-what-it-says":
-        console.log("do what?")
+      dowhatitsays()
+      console.log("bona")
         break;
 
 }
+}
+check()
 function movie() {
     console.log("movie", userSearch)
     axios.get("http://www.omdbapi.com/?t=" + userSearch + "=&plot=short&apikey=trilogy")
@@ -101,7 +105,18 @@ function concert() {
     });  
 
 }
+function dowhatitsays() {
+    fs.readFile('./random.text',"utf8", function(err, data) {
+        if (err) throw err;
+       data= data.split(',')
+                console.log(data);
+                search=data[0]
+                userSearch=data[1]
+console.log(search,userSearch)
+      check()
+      });
 
+}
 
 
 
